@@ -10,10 +10,6 @@ installs from that layout too and converts each plugin into a Qwen extension.
 
 ## Install
 
-The repository is private, so git on your machine must already be able to
-read it. For HTTPS, run `gh auth login` and then `gh auth setup-git`. For SSH,
-use a key that is loaded in `ssh-agent`.
-
 ### Claude Code
 
 ```text
@@ -26,11 +22,7 @@ turn on auto-update under `/plugin` → **Marketplaces** → `agent-tools`.
 
 ### Qwen Code
 
-Qwen reads `marketplace.json` through the GitHub API, which needs a token for
-a private repository:
-
 ```bash
-export GITHUB_TOKEN="$(gh auth token)"
 qwen extensions install sadv1r/agent-tools:bento-slides
 ```
 

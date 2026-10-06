@@ -48,10 +48,30 @@ plugins/<plugin>/
    folder name.
 2. Add an entry to `.claude-plugin/marketplace.json` with
    `"source": "./plugins/<plugin>"` and the same `name`.
-3. Run `claude plugin validate .` and `claude plugin validate ./plugins/<plugin>`.
+3. Run `scripts/check-claude.sh` (see [Checks](#checks)).
 4. Bump `version` in the plugin's `plugin.json` whenever you change the plugin.
    Installed copies only update when the version changes.
 
 To try a local checkout before pushing, run
 `claude plugin marketplace add ./` (Claude Code) or
 `qwen extensions install ./:<plugin>` (Qwen Code).
+
+## Checks
+
+`.github/workflows/check.yml` runs on every push to `main`, on pull requests,
+and weekly against the latest releases of both CLIs. No API keys are needed.
+
+| Script | What it checks |
+|---|---|
+| `scripts/check-claude.sh` | `claude plugin validate --strict` passes for the marketplace and each plugin; manifest names match; each plugin installs and all of its skills load |
+| `scripts/check-qwen.sh` | Each plugin installs in Qwen Code through its Claude converter; the version carries over and the skills arrive intact |
+| `scripts/check-version-bump.sh <base>` | Every plugin whose files changed since `<base>` has a new `version` |
+
+They run locally too. Each one installs into a throwaway config, so your own
+setup isn't touched:
+
+```bash
+scripts/check-claude.sh
+QWEN="npx -y @qwen-code/qwen-code@latest" scripts/check-qwen.sh   # if qwen isn't installed
+scripts/check-version-bump.sh origin/main
+```

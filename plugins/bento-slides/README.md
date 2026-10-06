@@ -7,31 +7,33 @@ deck needs no network access.
 | File | Upstream source |
 |---|---|
 | `skills/bento-slides/SKILL.md` | `https://bento.page/skills/bento-slides/SKILL.md`, with the download steps changed to use the bundled files |
-| `skills/bento-slides/references/agents.md` | `https://bento.page/agents.md` (guide v1.2.6), verbatim |
+| `skills/bento-slides/references/agents.md` | `https://bento.page/agents.md`, verbatim. Its first lines give the guide version |
 | `skills/bento-slides/assets/Bento_Slides.bento.html` | `https://bento.page/releases/slides/Bento_Slides.bento.html`, verbatim |
-| `skills/bento-slides/assets/templates/*.bento.html` | `https://bento.page/gallery/<name>.bento.html`, verbatim |
+| `skills/bento-slides/assets/templates/*.bento.html` | Every gallery deck linked from `https://bento.page`, verbatim |
 
-Snapshot taken on 2026-10-06. Bento is MIT-licensed, © 2026 The Bento authors.
+Bento is MIT-licensed, © 2026 The Bento authors.
 Each `.bento.html` file carries its own license notice. The fonts embedded in
 the templates (Fraunces, Instrument Sans) are under the OFL.
 
 The upstream plugin `bento-slides@bento` uses the same plugin and skill name.
 Uninstall it if you install this one, so only one of them triggers.
 
-## Refreshing the snapshot
+## Staying in sync with bento.page
 
-From this directory:
+The `update-bento` workflow runs every Monday and can also be started by hand.
+It runs `scripts/update-bento.sh` from the repo root, which works the same way
+locally:
 
-```bash
-S=skills/bento-slides
-curl -fsSL https://bento.page/agents.md -o $S/references/agents.md
-curl -fsSL https://bento.page/releases/slides/Bento_Slides.bento.html -o $S/assets/Bento_Slides.bento.html
-for t in signal-editorial-type terra-premium-product orbital-dark-immersive picnic-playful; do
-  curl -fsSL https://bento.page/gallery/$t.bento.html -o $S/assets/templates/$t.bento.html
-done
-```
+- `agents.md`, the app and the gallery decks are downloaded again and
+  replaced verbatim. Templates that are no longer on the site are removed.
+- If upstream `SKILL.md` changed, the change is merged into the local
+  `SKILL.md` with a 3-way merge. The merge base is the pristine upstream copy
+  in `upstream/bento-slides/SKILL.md`. If the change touches the lines that
+  were edited for offline use, nothing is merged, and the PR says what to
+  port by hand.
+- If anything changed, the plugin version gets a patch bump and a pull
+  request opens (or updates) on the `update/bento-slides` branch. The
+  `check` workflow then runs on that branch.
 
-After refreshing, compare `https://bento.page/skills/bento-slides/SKILL.md`
-with the local `SKILL.md`. Port any upstream changes, keeping the local edits
-that replace downloads. Then update the snapshot date above and bump `version`
-in `.claude-plugin/plugin.json`.
+If a new upstream line mentions a URL or a download, the PR quotes it, so you
+can make sure the skill still works offline.

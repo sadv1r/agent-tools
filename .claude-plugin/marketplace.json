@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "agent-tools",
+  "description": "sadv1r's personal plugins for Claude Code and Qwen Code",
+  "owner": {
+    "name": "sadv1r"
+  },
+  "plugins": [
+    {
+      "name": "bento-slides",
+      "source": "./plugins/bento-slides",
+      "description": "Create and edit Bento (.bento.html) slide decks fully offline: bundled Bento app, agent guide and gallery templates",
+      "category": "productivity",
+      "tags": ["slides", "presentation", "bento", "offline"]
+    }
+  ]
+}

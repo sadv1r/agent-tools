@@ -26,7 +26,7 @@ jobs:
           node-version: lts/*
       - run: npm install -g @anthropic-ai/claude-code@latest
       - run: claude --version
-      - run: scripts/check-claude.sh
+      - run: .github/scripts/check-claude.sh
 
   qwen-code:
     runs-on: ubuntu-latest
@@ -37,7 +37,7 @@ jobs:
           node-version: lts/*
       - run: npm install -g @qwen-code/qwen-code@latest
       - run: qwen --version
-      - run: scripts/check-qwen.sh
+      - run: .github/scripts/check-qwen.sh
 
   version-bump:
     if: github.event_name != 'schedule'
@@ -47,6 +47,6 @@ jobs:
         with:
           fetch-depth: 0
       # Manual runs compare with main.
-      - run: scripts/check-version-bump.sh "${BASE:-$(git merge-base origin/main HEAD)}"
+      - run: .github/scripts/check-version-bump.sh "${BASE:-$(git merge-base origin/main HEAD)}"
         env:
           BASE: ${{ github.event.pull_request.base.sha || github.event.before }}

@@ -1,7 +1,7 @@
 # Shared helpers for the check scripts. Source this file, don't run it.
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 MARKETPLACE="$(node -p 'require(process.argv[1]).name' "$ROOT/.claude-plugin/marketplace.json")"
 
 # Prints "<name> <dir>" for every marketplace entry with a relative-path source.

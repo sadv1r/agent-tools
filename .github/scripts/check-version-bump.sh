@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Fails when a plugin's files changed since <base> but its plugin.json version
 # did not. Installed copies only update when the version changes.
-# Locally: scripts/check-version-bump.sh origin/main
+# Locally: .github/scripts/check-version-bump.sh origin/main
 source "$(dirname "$0")/lib.sh"
 base="${1:?usage: check-version-bump.sh <base-commit>}"
 

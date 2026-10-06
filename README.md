@@ -40,7 +40,7 @@ plugins/<plugin>/
    folder name.
 2. Add an entry to `.claude-plugin/marketplace.json` with
    `"source": "./plugins/<plugin>"` and the same `name`.
-3. Run `scripts/check-claude.sh` (see [Checks](#checks)).
+3. Run `.github/scripts/check-claude.sh` (see [Checks](#checks)).
 4. Bump `version` in the plugin's `plugin.json` whenever you change the plugin.
    Installed copies only update when the version changes.
 
@@ -55,9 +55,9 @@ and weekly against the latest releases of both CLIs. No API keys are needed.
 
 | Script | What it checks |
 |---|---|
-| `scripts/check-claude.sh` | `claude plugin validate --strict` passes for the marketplace and each plugin; manifest names match; each plugin installs and all of its skills load |
-| `scripts/check-qwen.sh` | Each plugin installs in Qwen Code through its Claude converter; the version carries over and the skills arrive intact |
-| `scripts/check-version-bump.sh <base>` | Every plugin whose files changed since `<base>` has a new `version` |
+| `.github/scripts/check-claude.sh` | `claude plugin validate --strict` passes for the marketplace and each plugin; manifest names match; each plugin installs and all of its skills load |
+| `.github/scripts/check-qwen.sh` | Each plugin installs in Qwen Code through its Claude converter; the version carries over and the skills arrive intact |
+| `.github/scripts/check-version-bump.sh <base>` | Every plugin whose files changed since `<base>` has a new `version` |
 
 A second workflow, `bento-upstream`, runs every Monday. It opens an issue
 whenever bento.page publishes newer files than the ones bundled in the
@@ -68,7 +68,7 @@ The check scripts run locally too. Each one installs into a throwaway config,
 so your own setup isn't touched:
 
 ```bash
-scripts/check-claude.sh
-QWEN="npx -y @qwen-code/qwen-code@latest" scripts/check-qwen.sh   # if qwen isn't installed
-scripts/check-version-bump.sh origin/main
+.github/scripts/check-claude.sh
+QWEN="npx -y @qwen-code/qwen-code@latest" .github/scripts/check-qwen.sh   # if qwen isn't installed
+.github/scripts/check-version-bump.sh origin/main
 ```

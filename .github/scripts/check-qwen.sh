@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Installs each plugin into a throwaway Qwen Code home through the Claude
 # marketplace converter, and checks the converted extension.
-# Without a global `qwen`, run: QWEN="npx -y @qwen-code/qwen-code@latest" scripts/check-qwen.sh
+# Without a global `qwen`, run: QWEN="npx -y @qwen-code/qwen-code@latest" .github/scripts/check-qwen.sh
 source "$(dirname "$0")/lib.sh"
 QWEN="${QWEN:-qwen}"
 

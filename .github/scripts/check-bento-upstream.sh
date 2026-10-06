@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Checks whether bento.page has published files that differ from the ones
 # bundled in plugins/bento-slides, and writes a markdown report of the changes.
-# Usage: scripts/check-bento-upstream.sh [report-file]
+# Usage: .github/scripts/check-bento-upstream.sh [report-file]
 # Under GitHub Actions it also sets the output `changed` to true or false.
 source "$(dirname "$0")/lib.sh"
 report="${1:-/dev/stdout}"

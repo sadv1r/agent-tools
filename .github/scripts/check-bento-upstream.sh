@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # Checks whether bento.page has published files that differ from the ones
-# bundled in plugins/bento-slides, and writes a markdown report of the changes.
+# bundled in plugins/offline-bento-slides, and writes a markdown report of the changes.
 # Usage: .github/scripts/check-bento-upstream.sh [report-file]
 # Under GitHub Actions it also sets the output `changed` to true or false.
 source "$(dirname "$0")/lib.sh"
 report="${1:-/dev/stdout}"
 
 SITE=https://bento.page
-PLUGIN="$ROOT/plugins/bento-slides"
+PLUGIN="$ROOT/plugins/offline-bento-slides"
 SKILL="$PLUGIN/skills/bento-slides"
 
 tmp="$(mktemp -d)"
@@ -51,17 +51,17 @@ if [ "$(shasum -a 256 "$tmp/SKILL.md" | cut -d' ' -f1)" != "$(tr -d '[:space:]' 
 fi
 
 if [ -z "$changes" ]; then
-  echo "bento-slides matches $SITE"
+  echo "offline-bento-slides matches $SITE"
   if [ -n "${GITHUB_OUTPUT:-}" ]; then echo "changed=false" >> "$GITHUB_OUTPUT"; fi
   exit 0
 fi
 
 {
-  echo "bento.page has files that differ from the copies bundled in \`plugins/bento-slides/skills/bento-slides\`:"
+  echo "bento.page has files that differ from the copies bundled in \`plugins/offline-bento-slides/skills/bento-slides\`:"
   echo
   printf '%s' "$changes"
   echo
-  echo "To update, follow **Updating from bento.page** in \`plugins/bento-slides/README.md\`."
+  echo "To update, follow **Updating from bento.page** in \`plugins/offline-bento-slides/README.md\`."
   if $skill_changed; then
     echo
     echo "<details><summary>Diff from the local SKILL.md to the new upstream SKILL.md</summary>"
@@ -77,4 +77,4 @@ fi
 } > "$report"
 
 if [ -n "${GITHUB_OUTPUT:-}" ]; then echo "changed=true" >> "$GITHUB_OUTPUT"; fi
-echo "bento.page has updates for bento-slides"
+echo "bento.page has updates for offline-bento-slides"

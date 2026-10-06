@@ -1,6 +1,6 @@
 {
-  "name": "bento-slides",
-  "version": "1.0.3",
+  "name": "offline-bento-slides",
+  "version": "1.0.4",
   "description": "Create and edit Bento (.bento.html) slide decks fully offline: bundled Bento app, agent guide and gallery templates",
   "author": {
     "name": "sadv1r"

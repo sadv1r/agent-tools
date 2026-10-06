@@ -1,4 +1,4 @@
-# bento-slides
+# offline-bento-slides
 
 An offline copy of the upstream [bento-slides](https://bento.page/skills/bento-slides/SKILL.md)
 skill. Everything the upstream skill downloads is bundled here, so creating a
@@ -15,7 +15,7 @@ Bento is MIT-licensed, © 2026 The Bento authors.
 Each `.bento.html` file carries its own license notice. The fonts embedded in
 the templates (Fraunces, Instrument Sans) are under the OFL.
 
-The upstream plugin `bento-slides@bento` uses the same plugin and skill name.
+The upstream plugin `bento-slides@bento` ships a skill with the same name, `bento-slides`.
 Uninstall it if you install this one, so only one of them triggers.
 
 ## Updating from bento.page

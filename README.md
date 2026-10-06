@@ -6,7 +6,7 @@ installs from that layout too and converts each plugin into a Qwen extension.
 
 | Plugin | What it does |
 |---|---|
-| [`bento-slides`](plugins/bento-slides) | Create and edit [Bento](https://bento.page) `.bento.html` slide decks fully offline, using the bundled app, agent guide and gallery templates |
+| [`offline-bento-slides`](plugins/offline-bento-slides) | Create and edit [Bento](https://bento.page) `.bento.html` slide decks fully offline, using the bundled app, agent guide and gallery templates |
 | [`workflow`](plugins/workflow) | `/retry` resumes work cut off by an interruption; the `backlog` skill keeps deferred work in `docs/backlog/`, one file per item |
 
 ## Install
@@ -15,7 +15,7 @@ installs from that layout too and converts each plugin into a Qwen extension.
 
 ```text
 /plugin marketplace add sadv1r/agent-tools
-/plugin install bento-slides@sadv1r-agent-tools
+/plugin install offline-bento-slides@sadv1r-agent-tools
 /plugin install workflow@sadv1r-agent-tools
 ```
 
@@ -25,7 +25,7 @@ turn on auto-update under `/plugin` → **Marketplaces** → `sadv1r-agent-tools
 ### Qwen Code
 
 ```bash
-qwen extensions install sadv1r/agent-tools:bento-slides
+qwen extensions install sadv1r/agent-tools:offline-bento-slides
 qwen extensions install sadv1r/agent-tools:workflow
 ```
 
@@ -65,8 +65,8 @@ and weekly against the latest releases of both CLIs. No API keys are needed.
 
 A second workflow, `bento-upstream`, runs every Monday. It opens an issue
 whenever bento.page publishes newer files than the ones bundled in the
-bento-slides plugin. See
-[plugins/bento-slides](plugins/bento-slides/README.md#updating-from-bentopage).
+offline-bento-slides plugin. See
+[plugins/offline-bento-slides](plugins/offline-bento-slides/README.md#updating-from-bentopage).
 
 The check scripts run locally too. Each one installs into a throwaway config,
 so your own setup isn't touched:

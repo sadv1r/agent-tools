@@ -14,8 +14,8 @@
       "tags": ["workflow", "resume", "retry", "interrupt", "backlog"]
     },
     {
-      "name": "bento-slides",
-      "source": "./plugins/bento-slides",
+      "name": "offline-bento-slides",
+      "source": "./plugins/offline-bento-slides",
       "description": "Create and edit Bento (.bento.html) slide decks fully offline: bundled Bento app, agent guide and gallery templates",
       "category": "productivity",
       "tags": ["slides", "presentation", "bento", "offline"]

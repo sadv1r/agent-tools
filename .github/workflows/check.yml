@@ -40,12 +40,13 @@ jobs:
       - run: scripts/check-qwen.sh
 
   version-bump:
-    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - run: scripts/check-version-bump.sh "$BASE"
+      # Manual runs (including the ones update-bento starts) compare with main.
+      - run: scripts/check-version-bump.sh "${BASE:-$(git merge-base origin/main HEAD)}"
         env:
           BASE: ${{ github.event.pull_request.base.sha || github.event.before }}

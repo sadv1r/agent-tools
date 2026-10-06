@@ -9,9 +9,9 @@
     {
       "name": "workflow",
       "source": "./plugins/workflow",
-      "description": "Session workflow commands: /retry resumes work cut off by a manual stop, network loss, error or crash",
+      "description": "Session workflow tools: /retry resumes work cut off by an interruption, and the backlog skill keeps deferred work in docs/backlog/",
       "category": "productivity",
-      "tags": ["workflow", "resume", "retry", "interrupt"]
+      "tags": ["workflow", "resume", "retry", "interrupt", "backlog"]
     },
     {
       "name": "bento-slides",

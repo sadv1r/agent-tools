@@ -1,11 +1,11 @@
 {
   "name": "workflow",
-  "version": "1.0.0",
-  "description": "Session workflow commands: /retry resumes work cut off by a manual stop, network loss, error or crash",
+  "version": "1.1.0",
+  "description": "Session workflow tools: /retry resumes work cut off by an interruption, and the backlog skill keeps deferred work in docs/backlog/",
   "author": {
     "name": "sadv1r"
   },
   "repository": "https://github.com/sadv1r/agent-tools",
   "license": "MIT",
-  "keywords": ["workflow", "resume", "retry", "interrupt"]
+  "keywords": ["workflow", "resume", "retry", "interrupt", "backlog"]
 }

@@ -7,7 +7,7 @@ installs from that layout too and converts each plugin into a Qwen extension.
 | Plugin | What it does |
 |---|---|
 | [`bento-slides`](plugins/bento-slides) | Create and edit [Bento](https://bento.page) `.bento.html` slide decks fully offline, using the bundled app, agent guide and gallery templates |
-| [`workflow`](plugins/workflow) | Session commands: `/retry` resumes work cut off by a manual stop, network loss, error or crash |
+| [`workflow`](plugins/workflow) | `/retry` resumes work cut off by an interruption; the `backlog` skill keeps deferred work in `docs/backlog/`, one file per item |
 
 ## Install
 

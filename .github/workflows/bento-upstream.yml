@@ -1,0 +1,34 @@
+name: bento-upstream
+
+# Weekly: open an issue when bento.page publishes files that differ from the
+# ones bundled in plugins/bento-slides. One open issue is kept up to date.
+on:
+  schedule:
+    - cron: "7 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - id: check
+        run: scripts/check-bento-upstream.sh "$RUNNER_TEMP/report.md"
+
+      - if: steps.check.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create bento-upstream --color 1D76DB --description "bento.page published new files" --force
+          number="$(gh issue list --label bento-upstream --state open --json number --jq '.[0].number // empty')"
+          if [ -n "$number" ]; then
+            gh issue edit "$number" --body-file "$RUNNER_TEMP/report.md"
+          else
+            gh issue create --title "bento.page has updates for bento-slides" \
+              --label bento-upstream --body-file "$RUNNER_TEMP/report.md"
+          fi

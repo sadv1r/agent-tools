@@ -67,9 +67,10 @@ and weekly against the latest releases of both CLIs. No API keys are needed.
 | `scripts/check-qwen.sh` | Each plugin installs in Qwen Code through its Claude converter; the version carries over and the skills arrive intact |
 | `scripts/check-version-bump.sh <base>` | Every plugin whose files changed since `<base>` has a new `version` |
 
-A second workflow, `update-bento`, runs every Monday. It opens a pull request
-whenever bento.page publishes new files for the bento-slides plugin. See
-[plugins/bento-slides](plugins/bento-slides/README.md#staying-in-sync-with-bentopage).
+A second workflow, `bento-upstream`, runs every Monday. It opens an issue
+whenever bento.page publishes newer files than the ones bundled in the
+bento-slides plugin. See
+[plugins/bento-slides](plugins/bento-slides/README.md#updating-from-bentopage).
 
 The check scripts run locally too. Each one installs into a throwaway config,
 so your own setup isn't touched:

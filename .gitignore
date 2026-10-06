@@ -1,4 +1,10 @@
+### macOS ###
 .DS_Store
-*.zip
-# Qwen Code leaves these behind when installing from a local checkout
+
+### JetBrains ###
+/.idea
+*.iml
+
+### Qwen Code ###
+# Left behind when installing from a local checkout
 /plugin[0-9a-f]*/

@@ -15,12 +15,12 @@ installs from that layout too and converts each plugin into a Qwen extension.
 
 ```text
 /plugin marketplace add sadv1r/agent-tools
-/plugin install bento-slides@agent-tools
-/plugin install workflow@agent-tools
+/plugin install bento-slides@sadv1r-agent-tools
+/plugin install workflow@sadv1r-agent-tools
 ```
 
-Updates arrive with `/plugin marketplace update agent-tools`. You can also
-turn on auto-update under `/plugin` → **Marketplaces** → `agent-tools`.
+Updates arrive with `/plugin marketplace update sadv1r-agent-tools`. You can also
+turn on auto-update under `/plugin` → **Marketplaces** → `sadv1r-agent-tools`.
 
 ### Qwen Code
 

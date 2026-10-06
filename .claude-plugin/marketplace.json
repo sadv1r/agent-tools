@@ -1,6 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "sadv1r-agent-tools",
+  "description": "sadv1r's personal plugins for Claude Code and Qwen Code",
   "owner": {
     "name": "sadv1r"
   },

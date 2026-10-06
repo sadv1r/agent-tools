@@ -130,7 +130,7 @@ looked at is not finished.
   data URI in `src` (self-contained) or references a URL for big files (keeps
   the deck small). `autoplay` runs only in present mode and needs `muted:true`
   for video. Don't embed large videos — they bloat the file.
-- **Never change `docId`** when editing an existing deck; it is the
+- **Never regenerate `docId`** when editing an existing deck; it is the
   document's identity. (Fresh decks omit it — the app mints one.)
 - `template:true` → every open mints a fresh deck; `readonly:true` → the
   file boots straight into the show with no editor.

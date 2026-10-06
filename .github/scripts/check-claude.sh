@@ -5,6 +5,13 @@ source "$(dirname "$0")/lib.sh"
 
 claude plugin validate --strict "$ROOT"
 
+# A plugin directory that no marketplace entry points at is skipped by every check below.
+for dir in "$ROOT"/plugins/*/; do
+  [ -d "$dir" ] || continue
+  dir="plugins/$(basename "$dir")"
+  plugins | awk '{ print $2 }' | grep -qxF "$dir" || fail "$dir has no marketplace entry"
+done
+
 CLAUDE_CONFIG_DIR="$(mktemp -d)"
 export CLAUDE_CONFIG_DIR
 trap 'rm -rf "$CLAUDE_CONFIG_DIR"' EXIT
@@ -12,12 +19,14 @@ claude plugin marketplace add "$ROOT"
 
 while read -r name src <&3; do
   echo "== $name"
+  [ "$src" = "plugins/$name" ] || fail "$name: marketplace source is ./$src, expected ./plugins/$name"
   claude plugin validate --strict "$ROOT/$src"
 
   manifest="$ROOT/$src/.claude-plugin/plugin.json"
   [ "$(json_field "$manifest" name)" = "$name" ] || fail "$name: plugin.json name differs from the marketplace entry"
   [ "$(json_field "$manifest" description)" = "$(entry_field "$name" description)" ] || fail "$name: plugin.json description differs from the marketplace entry"
   [ -n "$(json_field "$manifest" version)" ] || fail "$name: plugin.json has no version (Qwen Code needs one, and updates key off it)"
+  [ -z "$(entry_field "$name" version)" ] || fail "$name: version is set in the marketplace entry; set it only in plugin.json"
 
   claude plugin install "$name@$MARKETPLACE"
   details="$(claude plugin details "$name")"

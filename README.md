@@ -64,9 +64,10 @@ and weekly against the latest releases of both CLIs. No API keys are needed.
 | `.github/scripts/check-version-bump.sh <base>` | Every plugin whose files changed since `<base>` has a new `version` |
 | `shellcheck -x -s bash .github/scripts/*.sh` | The check scripts themselves lint clean |
 
-A second workflow, `bento-upstream`, runs every Monday. It opens an issue
+A second workflow, `bento-upstream`, runs every Monday and on every push to
+`main` that changes the offline-bento-slides plugin. It opens an issue
 whenever bento.page publishes newer files than the ones bundled in the
-offline-bento-slides plugin. See
+plugin, and closes it once they match again. See
 [plugins/offline-bento-slides](plugins/offline-bento-slides/README.md#updating-from-bentopage).
 
 The check scripts run locally too. Each one installs into a throwaway config,

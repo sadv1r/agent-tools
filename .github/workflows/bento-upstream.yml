@@ -2,7 +2,15 @@ name: bento-upstream
 
 # Weekly: open an issue when bento.page publishes files that differ from the
 # ones bundled in plugins/offline-bento-slides. One open issue is kept up to date.
+# Pushes to main that change the plugin re-run the check, so the issue closes as
+# soon as an update lands that makes the bundled files match again.
 on:
+  push:
+    branches: [main]
+    paths:
+      - plugins/offline-bento-slides/**
+      - .github/scripts/check-bento-upstream.sh
+      - .github/workflows/bento-upstream.yml
   schedule:
     - cron: "7 5 * * 1"
   workflow_dispatch:
@@ -10,6 +18,10 @@ on:
 permissions:
   contents: read
   issues: write
+
+# A push and the weekly run at once could each open an issue.
+concurrency:
+  group: bento-upstream
 
 jobs:
   check:
@@ -32,3 +44,11 @@ jobs:
             gh issue create --title "bento.page has updates for offline-bento-slides" \
               --label bento-upstream --body-file "$RUNNER_TEMP/report.md"
           fi
+
+      - if: steps.check.outputs.changed == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for number in $(gh issue list --label bento-upstream --state open --json number --jq '.[].number'); do
+            gh issue close "$number" --comment "The bundled files match bento.page as of $GITHUB_SHA."
+          done

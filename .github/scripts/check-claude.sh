@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Validates the marketplace and every plugin with Claude Code, then installs each
-# plugin into a throwaway config and checks that all of its skills load.
+# plugin into a throwaway config and checks that all of its skills and commands load.
 source "$(dirname "$0")/lib.sh"
 
 claude plugin validate --strict "$ROOT"
@@ -22,11 +22,12 @@ while read -r name src <&3; do
   echo "$details"
 
   # `details` prints "Skills (N)  a, b" followed by the next section, "Agents (N)".
+  # Commands are listed there too.
   loaded="$(awk '/^ *Skills \(/ { f = 1 } /^ *Agents \(/ { f = 0 } f' <<<"$details")"
-  expected="$(skills_of "$src" | wc -l | tr -d ' ')"
-  grep -q "Skills ($expected)" <<<"$loaded" || fail "$name: expected $expected skill(s), got: $loaded"
-  for skill in $(skills_of "$src"); do
-    grep -Eq "(^|[^[:alnum:]_-])$skill([^[:alnum:]_-]|$)" <<<"$loaded" || fail "$name: skill $skill did not load"
+  expected="$( { skills_of "$src"; commands_of "$src"; } | wc -l | tr -d ' ')"
+  grep -q "Skills ($expected)" <<<"$loaded" || fail "$name: expected $expected skill(s) and command(s), got: $loaded"
+  for skill in $(skills_of "$src") $(commands_of "$src"); do
+    grep -Eq "(^|[^[:alnum:]_-])$skill([^[:alnum:]_-]|$)" <<<"$loaded" || fail "$name: $skill did not load"
   done
 done 3< <(plugins)
 

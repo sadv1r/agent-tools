@@ -26,6 +26,15 @@ skills_of() {
   return 0
 }
 
+# Prints the slash commands a plugin ships: every commands/<name>.md under it.
+commands_of() {
+  local f
+  for f in "$ROOT/$1"/commands/*.md; do
+    [ -e "$f" ] && basename "$f" .md
+  done
+  return 0
+}
+
 error() {
   if [ -n "${GITHUB_ACTIONS:-}" ]; then echo "::error::$*"; else echo "error: $*"; fi >&2
 }

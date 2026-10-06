@@ -24,10 +24,12 @@ while read -r name src <&3; do
   got="$(json_field "$ext/qwen-extension.json" version)"
   [ "$got" = "$want" ] || fail "$name: converted version is '$got', expected '$want'"
 
-  # The converter copies skills verbatim (dotfiles excluded).
-  if [ -d "$ROOT/$src/skills" ]; then
-    diff -r -x '.*' "$ROOT/$src/skills" "$ext/skills" || fail "$name: converted skills differ from the source"
-  fi
+  # The converter copies skills and commands verbatim (dotfiles excluded).
+  for dir in skills commands; do
+    if [ -d "$ROOT/$src/$dir" ]; then
+      diff -r -x '.*' "$ROOT/$src/$dir" "$ext/$dir" || fail "$name: converted $dir differ from the source"
+    fi
+  done
 done 3< <(plugins)
 
 listing="$($QWEN extensions list 2>&1)"
@@ -35,6 +37,9 @@ echo "$listing"
 while read -r name src <&3; do
   for skill in $(skills_of "$src"); do
     grep -Eq "(^|[^[:alnum:]_-])$skill([^[:alnum:]_-]|$)" <<<"$listing" || fail "$name: skill $skill not listed by Qwen Code"
+  done
+  for cmd in $(commands_of "$src"); do
+    grep -Eq "(^|[[:space:]])/$cmd([^[:alnum:]_-]|$)" <<<"$listing" || fail "$name: command /$cmd not listed by Qwen Code"
   done
 done 3< <(plugins)
 

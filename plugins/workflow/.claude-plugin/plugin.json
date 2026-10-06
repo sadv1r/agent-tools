@@ -1,0 +1,11 @@
+{
+  "name": "workflow",
+  "version": "1.0.0",
+  "description": "Session workflow commands: /retry resumes work cut off by a manual stop, network loss, error or crash",
+  "author": {
+    "name": "sadv1r"
+  },
+  "repository": "https://github.com/sadv1r/agent-tools",
+  "license": "MIT",
+  "keywords": ["workflow", "resume", "retry", "interrupt"]
+}

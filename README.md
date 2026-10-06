@@ -7,6 +7,7 @@ installs from that layout too and converts each plugin into a Qwen extension.
 | Plugin | What it does |
 |---|---|
 | [`bento-slides`](plugins/bento-slides) | Create and edit [Bento](https://bento.page) `.bento.html` slide decks fully offline, using the bundled app, agent guide and gallery templates |
+| [`workflow`](plugins/workflow) | Session commands: `/retry` resumes work cut off by a manual stop, network loss, error or crash |
 
 ## Install
 
@@ -15,6 +16,7 @@ installs from that layout too and converts each plugin into a Qwen extension.
 ```text
 /plugin marketplace add sadv1r/agent-tools
 /plugin install bento-slides@agent-tools
+/plugin install workflow@agent-tools
 ```
 
 Updates arrive with `/plugin marketplace update agent-tools`. You can also
@@ -24,16 +26,18 @@ turn on auto-update under `/plugin` → **Marketplaces** → `agent-tools`.
 
 ```bash
 qwen extensions install sadv1r/agent-tools:bento-slides
+qwen extensions install sadv1r/agent-tools:workflow
 ```
 
-To update later, run `qwen extensions update bento-slides`.
+To update later, run `qwen extensions update <plugin>`.
 
 ## Adding a plugin
 
 ```text
 plugins/<plugin>/
 ├── .claude-plugin/plugin.json      # name, version, description, author
-└── skills/<skill>/SKILL.md         # plus any references/, assets/, scripts/
+├── skills/<skill>/SKILL.md         # plus any references/, assets/, scripts/
+└── commands/<command>.md           # slash commands
 ```
 
 1. Create the directory above. The `name` in `plugin.json` must match the
@@ -55,8 +59,8 @@ and weekly against the latest releases of both CLIs. No API keys are needed.
 
 | Script | What it checks |
 |---|---|
-| `.github/scripts/check-claude.sh` | `claude plugin validate --strict` passes for the marketplace and each plugin; manifest names match; each plugin installs and all of its skills load |
-| `.github/scripts/check-qwen.sh` | Each plugin installs in Qwen Code through its Claude converter; the version carries over and the skills arrive intact |
+| `.github/scripts/check-claude.sh` | `claude plugin validate --strict` passes for the marketplace and each plugin; manifest names match; each plugin installs and all of its skills and commands load |
+| `.github/scripts/check-qwen.sh` | Each plugin installs in Qwen Code through its Claude converter; the version carries over and the skills and commands arrive intact |
 | `.github/scripts/check-version-bump.sh <base>` | Every plugin whose files changed since `<base>` has a new `version` |
 
 A second workflow, `bento-upstream`, runs every Monday. It opens an issue

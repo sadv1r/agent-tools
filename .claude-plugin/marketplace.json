@@ -1,11 +1,17 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
-  "name": "agent-tools",
-  "description": "sadv1r's personal plugins for Claude Code and Qwen Code",
+  "name": "sadv1r-agent-tools",
   "owner": {
     "name": "sadv1r"
   },
   "plugins": [
+    {
+      "name": "workflow",
+      "source": "./plugins/workflow",
+      "description": "Session workflow commands: /retry resumes work cut off by a manual stop, network loss, error or crash",
+      "category": "productivity",
+      "tags": ["workflow", "resume", "retry", "interrupt"]
+    },
     {
       "name": "bento-slides",
       "source": "./plugins/bento-slides",

@@ -19,6 +19,14 @@ json_field() {
   node -p 'require(process.argv[1])[process.argv[2]] ?? ""' "$1" "$2"
 }
 
+# entry_field <plugin> <field> prints the field of the plugin's marketplace entry,
+# or nothing when it is missing.
+entry_field() {
+  node -p '
+    require(process.argv[1]).plugins.find(p => p.name === process.argv[2])?.[process.argv[3]] ?? ""
+  ' "$ROOT/.claude-plugin/marketplace.json" "$1" "$2"
+}
+
 # Prints the skill names a plugin ships: every skills/<name>/SKILL.md under it.
 skills_of() {
   local f

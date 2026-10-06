@@ -16,6 +16,7 @@ while read -r name src <&3; do
 
   manifest="$ROOT/$src/.claude-plugin/plugin.json"
   [ "$(json_field "$manifest" name)" = "$name" ] || fail "$name: plugin.json name differs from the marketplace entry"
+  [ "$(json_field "$manifest" description)" = "$(entry_field "$name" description)" ] || fail "$name: plugin.json description differs from the marketplace entry"
   [ -n "$(json_field "$manifest" version)" ] || fail "$name: plugin.json has no version (Qwen Code needs one, and updates key off it)"
 
   claude plugin install "$name@$MARKETPLACE"

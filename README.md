@@ -62,6 +62,7 @@ and weekly against the latest releases of both CLIs. No API keys are needed.
 | `.github/scripts/check-claude.sh` | `claude plugin validate --strict` passes for the marketplace and each plugin; manifest names match; each plugin installs and all of its skills and commands load |
 | `.github/scripts/check-qwen.sh` | Each plugin installs in Qwen Code through its Claude converter; the version carries over and the skills and commands arrive intact |
 | `.github/scripts/check-version-bump.sh <base>` | Every plugin whose files changed since `<base>` has a new `version` |
+| `shellcheck -x -s bash .github/scripts/*.sh` | The check scripts themselves lint clean |
 
 A second workflow, `bento-upstream`, runs every Monday. It opens an issue
 whenever bento.page publishes newer files than the ones bundled in the

@@ -13,6 +13,8 @@ SKILL="$PLUGIN/skills/bento-slides"
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
 get() { curl -fsSL --retry 3 -o "$2" "$SITE/$1"; }
+# The backticks are literal.
+# shellcheck disable=SC2016
 guide_version() { grep -oE 'Guide version `[^`]+`' "$1" | tr -d '`' | awk '{print $3}'; }
 
 changes=""

@@ -2,6 +2,8 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+# Used by the scripts that source this file.
+# shellcheck disable=SC2034
 MARKETPLACE="$(node -p 'require(process.argv[1]).name' "$ROOT/.claude-plugin/marketplace.json")"
 
 # Prints "<name> <dir>" for every marketplace entry with a relative-path source.

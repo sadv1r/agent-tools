@@ -5,7 +5,8 @@ source "$(dirname "$0")/lib.sh"
 
 claude plugin validate --strict "$ROOT"
 
-export CLAUDE_CONFIG_DIR="$(mktemp -d)"
+CLAUDE_CONFIG_DIR="$(mktemp -d)"
+export CLAUDE_CONFIG_DIR
 trap 'rm -rf "$CLAUDE_CONFIG_DIR"' EXIT
 claude plugin marketplace add "$ROOT"
 

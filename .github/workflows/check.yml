@@ -39,6 +39,13 @@ jobs:
       - run: qwen --version
       - run: .github/scripts/check-qwen.sh
 
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: shellcheck --version
+      - run: shellcheck -x -s bash .github/scripts/*.sh
+
   version-bump:
     if: github.event_name != 'schedule'
     runs-on: ubuntu-latest

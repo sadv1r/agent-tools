@@ -101,7 +101,10 @@ title="bento-slides: sync with bento.page (guide $new_guide)"
     echo "$skill_note"
   fi
   echo
-  echo "Before merging, open a deck made with the new app and page through it."
+  echo "Before merging:"
+  echo
+  echo "- If the checks show as waiting, click **Approve workflows to run** on this PR."
+  echo "- Open a deck made with the new app and page through it."
 } > "$body"
 
 if [ -n "${GITHUB_OUTPUT:-}" ]; then

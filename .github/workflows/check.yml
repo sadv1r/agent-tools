@@ -46,7 +46,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      # Manual runs (including the ones update-bento starts) compare with main.
+      # Manual runs compare with main.
       - run: scripts/check-version-bump.sh "${BASE:-$(git merge-base origin/main HEAD)}"
         env:
           BASE: ${{ github.event.pull_request.base.sha || github.event.before }}

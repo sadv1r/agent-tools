@@ -32,8 +32,14 @@ locally:
   were edited for offline use, nothing is merged, and the PR says what to
   port by hand.
 - If anything changed, the plugin version gets a patch bump and a pull
-  request opens (or updates) on the `update/bento-slides` branch. The
-  `check` workflow then runs on that branch.
+  request opens (or updates) on the `update/bento-slides` branch.
+
+PRs opened by the workflow's built-in token don't start the `check` workflow
+by themselves. The PR shows **Approve workflows to run**, and one click runs
+the checks. To skip that click, add a fine-grained personal access token as
+the repository secret `AGENT_TOOLS_PR_TOKEN`. It needs Contents and Pull
+requests read/write access on this repo only. The workflow uses it when it is
+present.
 
 If a new upstream line mentions a URL or a download, the PR quotes it, so you
 can make sure the skill still works offline.

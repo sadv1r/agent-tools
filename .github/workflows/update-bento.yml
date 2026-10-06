@@ -10,7 +10,6 @@ on:
 permissions:
   contents: write
   pull-requests: write
-  actions: write # to start the check workflow on the PR branch
 
 concurrency: update-bento
 
@@ -23,10 +22,13 @@ jobs:
       - id: update
         run: scripts/update-bento.sh "$RUNNER_TEMP/pr-body.md"
 
-      - id: pr
-        if: steps.update.outputs.changed == 'true'
+      # With the default token, the PR's check run waits for "Approve workflows
+      # to run". A fine-grained PAT (Contents + Pull requests: read/write on this
+      # repo) in the AGENT_TOOLS_PR_TOKEN secret makes the checks start on their own.
+      - if: steps.update.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v8
         with:
+          token: ${{ secrets.AGENT_TOOLS_PR_TOKEN || github.token }}
           branch: update/bento-slides
           delete-branch: true
           add-paths: |
@@ -35,10 +37,3 @@ jobs:
           commit-message: ${{ steps.update.outputs.title }}
           title: ${{ steps.update.outputs.title }}
           body-path: ${{ runner.temp }}/pr-body.md
-
-      # A PR opened with GITHUB_TOKEN doesn't trigger pull_request workflows,
-      # but a dispatched run on the branch reports its checks on the PR.
-      - if: steps.pr.outputs.pull-request-operation == 'created' || steps.pr.outputs.pull-request-operation == 'updated'
-        run: gh workflow run check.yml --ref update/bento-slides
-        env:
-          GH_TOKEN: ${{ github.token }}

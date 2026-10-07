@@ -1,0 +1,4 @@
+# Verbatim snapshots from bento.page: not our code, not reviewable as a diff.
+# GitHub leaves them out of the language stats and collapses them in PR views;
+# git log -p and git show print "Binary files differ" instead of megabytes.
+plugins/offline-bento-slides/skills/bento-slides/assets/** linguist-generated -diff

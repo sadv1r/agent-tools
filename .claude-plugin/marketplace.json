@@ -19,6 +19,13 @@
       "description": "Create and edit Bento (.bento.html) slide decks fully offline: bundled Bento app, agent guide and gallery templates",
       "category": "productivity",
       "tags": ["slides", "presentation", "bento", "offline"]
+    },
+    {
+      "name": "brainstorm",
+      "source": "./plugins/brainstorm",
+      "description": "Collaborative design dialogue: idea to approaches to design to plan, one question at a time",
+      "category": "productivity",
+      "tags": ["brainstorm", "design", "planning"]
     }
   ]
 }

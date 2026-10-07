@@ -8,6 +8,7 @@ installs from that layout too and converts each plugin into a Qwen extension.
 |---|---|
 | [`offline-bento-slides`](plugins/offline-bento-slides) | Create and edit [Bento](https://bento.page) `.bento.html` slide decks fully offline, using the bundled app, agent guide and gallery templates |
 | [`workflow`](plugins/workflow) | `/retry` resumes work cut off by an interruption; the `backlog` skill keeps deferred work in `docs/backlog/`, one file per item |
+| [`brainstorm`](plugins/brainstorm) | Turns an idea into a design through one-at-a-time questions, two or three approaches and section-by-section review. A personal fork of umputun's [brainstorm](https://github.com/umputun/cc-thingz/tree/master/plugins/brainstorm) |
 
 ## Install
 
@@ -17,6 +18,7 @@ installs from that layout too and converts each plugin into a Qwen extension.
 /plugin marketplace add sadv1r/agent-tools
 /plugin install offline-bento-slides@sadv1r-agent-tools
 /plugin install workflow@sadv1r-agent-tools
+/plugin install brainstorm@sadv1r-agent-tools
 ```
 
 Updates arrive with `/plugin marketplace update sadv1r-agent-tools`. You can also
@@ -27,6 +29,7 @@ turn on auto-update under `/plugin` → **Marketplaces** → `sadv1r-agent-tools
 ```bash
 qwen extensions install sadv1r/agent-tools:offline-bento-slides
 qwen extensions install sadv1r/agent-tools:workflow
+qwen extensions install sadv1r/agent-tools:brainstorm
 ```
 
 To update later, run `qwen extensions update <plugin>`.
@@ -39,6 +42,7 @@ Qwen Code session, install each plugin from the zip:
 ```text
 /extensions install ~/Downloads/agent-tools-main.zip:offline-bento-slides
 /extensions install ~/Downloads/agent-tools-main.zip:workflow
+/extensions install ~/Downloads/agent-tools-main.zip:brainstorm
 ```
 
 To update a zip install, download a new zip to the same path. Then, in a Qwen

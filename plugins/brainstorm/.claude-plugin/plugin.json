@@ -1,0 +1,11 @@
+{
+  "name": "brainstorm",
+  "version": "1.0.0",
+  "description": "Collaborative design dialogue: idea to approaches to design to plan, one question at a time",
+  "author": {
+    "name": "sadv1r"
+  },
+  "repository": "https://github.com/sadv1r/agent-tools",
+  "license": "MIT",
+  "keywords": ["brainstorm", "design", "planning"]
+}

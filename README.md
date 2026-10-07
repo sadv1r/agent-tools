@@ -31,6 +31,21 @@ qwen extensions install sadv1r/agent-tools:workflow
 
 To update later, run `qwen extensions update <plugin>`.
 
+To install from a zip instead,
+[download the repository as a zip](https://github.com/sadv1r/agent-tools/archive/refs/heads/main.zip)
+(on GitHub: **Code** → **Download ZIP**). You don't need to extract it. In a
+Qwen Code session, install each plugin from the zip:
+
+```text
+/extensions install ~/Downloads/agent-tools-main.zip:offline-bento-slides
+/extensions install ~/Downloads/agent-tools-main.zip:workflow
+```
+
+To update a zip install, download a new zip to the same path. Then, in a Qwen
+Code session, open `/extensions manage`, select the plugin and choose
+**Mark for Update**. Qwen reports that an update is available; choose
+**Update Now**.
+
 ## Adding a plugin
 
 ```text

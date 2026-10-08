@@ -6,13 +6,10 @@
 #
 # strips leading YYYYMMDD- date prefix from branch name since plan files
 # use date prefixes (e.g., 20260329-feature-name.md) but branch names should not
-# VCS-aware: dispatches to git or hg based on detect-vcs.sh
 
 set -e
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-
-# derive branch name from plan file path (shared by git and hg paths)
+# derive branch name from plan file path
 # e.g., docs/plans/20260329-feature-name.md -> feature-name
 derive_branch_name() {
     local name
@@ -23,7 +20,7 @@ derive_branch_name() {
     echo "$name"
 }
 
-# --print-name mode: derive and print the branch name only, with NO VCS side effects.
+# --print-name mode: derive and print the branch name only, with NO git side effects.
 # the exec SKILL uses this in worktree mode to name the worktree/branch without ever
 # running `git checkout -b` in the main working tree (which would break isolation).
 if [ "${1:-}" = "--print-name" ]; then
@@ -39,8 +36,6 @@ if [ -z "${1:-}" ]; then
     echo "error: plan file path required" >&2
     exit 1
 fi
-
-vcs=$(bash "$SCRIPT_DIR/detect-vcs.sh")
 
 do_git() {
     local plan_file="$1"
@@ -88,55 +83,4 @@ do_git() {
     echo "$branch_name"
 }
 
-do_hg() {
-    local plan_file="$1"
-    # current active bookmark — modern-Mercurial equivalent of "current branch".
-    # empty when no bookmark is active — matches do_git "on default branch" case.
-    # uses bookmarks (not named branches) because Mercurial-compatible forks have
-    # dropped the named-branch subcommands in favour of bookmarks; upstream
-    # Mercurial still ships them but recommends bookmark-based workflows.
-    # bookmark primitives keep this script portable across the full ecosystem.
-    local current
-    current=$(hg log -r . --template '{activebookmark}\n')
-
-    # resolve the default branch so an active default bookmark (e.g. master / main
-    # when the default is exposed as remote/master) is not mistaken for a feature
-    # branch. detect-branch.sh returns `remote/<name>` in repos with remote-tracking
-    # refs; strip the prefix since local bookmarks use the bare name.
-    local default_branch
-    default_branch=$(bash "$SCRIPT_DIR/detect-branch.sh" 2>/dev/null || true)
-    default_branch=${default_branch#remote/}
-
-    # if an active bookmark exists and it is not the default, treat it as a
-    # feature branch and early-return. mirrors the do_git branch-check shape.
-    if [ -n "$current" ] && [ -n "$default_branch" ] && [ "$current" != "$default_branch" ]; then
-        echo "$current"
-        return 0
-    elif [ -n "$current" ] && [ -z "$default_branch" ] && [ "$current" != "main" ] && [ "$current" != "master" ]; then
-        # no default detected — fall back to the main/master heuristic
-        echo "$current"
-        return 0
-    fi
-
-    local branch_name
-    branch_name=$(derive_branch_name "$plan_file")
-
-    # partial-run recovery: switch to existing bookmark, else create one on current commit.
-    # hg book --template lists local bookmark names — fast, no network, works on both dialects.
-    if hg book --template '{bookmark}\n' 2>/dev/null | grep -qxF "$branch_name"; then
-        hg update "$branch_name" >/dev/null
-    else
-        hg book "$branch_name" >/dev/null
-    fi
-
-    echo "$branch_name"
-}
-
-case "$vcs" in
-git) do_git "$@" ;;
-hg) do_hg "$@" ;;
-*)
-    echo "error: unsupported VCS: $vcs" >&2
-    exit 1
-    ;;
-esac
+do_git "$@"

@@ -3,7 +3,7 @@
 # usage: run-external-review.sh "<external_review_cmd>" "<prompt>"
 #
 # with an empty <external_review_cmd>, delegates to run-codex.sh (codex-specific
-# sandbox/model flags, hg handling). with a command set, that command is run
+# sandbox/model flags). with a command set, that command is run
 # instead, with the prompt appended as the final argv element. the "External
 # review contract" section of README.md is authoritative for what the tool must
 # be able to do, emit, and leave untouched -- do not restate it here

@@ -12,6 +12,8 @@ Changes from upstream:
 
 - `make` is a skill (`skills/make/SKILL.md`) instead of a command, and its
   description lists trigger phrases such as "make a plan".
+- Git only. `detect-vcs.sh` and the Mercurial branches in the exec scripts and
+  prompts are gone.
 
 The upstream plugin `planning@umputun-cc-thingz` has the same name. Uninstall
 it if you install this one, so only one of them triggers.

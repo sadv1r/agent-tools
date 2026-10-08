@@ -38,7 +38,7 @@ done
 
 # a passed-but-empty data dir means ${CLAUDE_PLUGIN_DATA} substituted to nothing,
 # so user-level overrides are unavailable. report it instead of silently writing a
-# project-level copy the caller did not ask for -- same handling as commands/make.md.
+# project-level copy the caller did not ask for.
 # "/" normalizes to empty above and is rejected here rather than downgrading too
 if [ "$#" -ge 2 ] && [ -z "$data_dir" ]; then
     echo "error: data-dir argument is empty or the filesystem root -- user-level overrides require the plugin to be installed from the marketplace; omit the argument for a project-level copy" >&2

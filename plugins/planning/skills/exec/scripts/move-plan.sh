@@ -2,7 +2,7 @@
 # move a completed plan file into its sibling completed/ directory and commit it
 # usage: move-plan.sh <plan-file-path>
 # no-op if the plan is already under completed/ or the file is missing
-# VCS-aware commit via stage-and-commit.sh; does NOT push
+# commits via stage-and-commit.sh; does NOT push
 
 set -e
 
@@ -42,7 +42,7 @@ mkdir -p "$dest_dir"
 mv "$plan" "$dest"
 
 # stage-and-commit.sh stages both the (now-removed) old path and the new path;
-# git and hg each record this as the rename plus commit
+# git records this as the rename plus commit
 bash "$SCRIPT_DIR/stage-and-commit.sh" "docs: move completed plan $base to completed/" "$plan" "$dest"
 
 echo "moved plan to $dest"

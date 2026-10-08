@@ -2,7 +2,6 @@
 # run codex review and return output
 # usage: run-codex.sh "<prompt>"
 # outputs codex response to stdout
-# VCS-aware: in hg repos, adds --skip-git-repo-check so codex doesn't refuse
 
 set -e
 
@@ -12,16 +11,7 @@ if [ -z "$prompt" ]; then
     exit 1
 fi
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-# detect-vcs.sh exits non-zero on non-VCS dirs; set -e propagates so the
-# script aborts before reaching codex with an unknown VCS value
-vcs=$(bash "$SCRIPT_DIR/detect-vcs.sh")
-
-# build args as an array so the hg-specific flag can be positioned right after
-# 'exec' (before --sandbox) as an exec-level option
-args=("exec")
-[ "$vcs" = "hg" ] && args+=("--skip-git-repo-check")
-args+=("--sandbox" "read-only")
+args=("exec" "--sandbox" "read-only")
 
 # -c overrides switch provider routing in a way some corporate codex
 # proxies / wrappers reject (e.g. "Error: Model provider 'responses' not

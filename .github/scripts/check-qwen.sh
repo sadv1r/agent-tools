@@ -24,11 +24,13 @@ while read -r name src <&3; do
   got="$(json_field "$ext/qwen-extension.json" version)"
   [ "$got" = "$want" ] || fail "$name: converted version is '$got', expected '$want'"
 
-  # The converter copies skills and commands verbatim (dotfiles excluded).
+  # Qwen copies every skill and command file except dotfiles. It may rewrite
+  # paths inside them, so compare file names, not content.
   for dir in skills commands; do
-    if [ -d "$ROOT/$src/$dir" ]; then
-      diff -r -x '.*' "$ROOT/$src/$dir" "$ext/$dir" || fail "$name: converted $dir differ from the source"
-    fi
+    [ -d "$ROOT/$src/$dir" ] || continue
+    diff <(cd "$ROOT/$src/$dir" && find . -type f -not -path '*/.*' | sort) \
+         <(cd "$ext/$dir" && find . -type f -not -path '*/.*' | sort) \
+      || fail "$name: converted $dir have missing or extra files"
   done
 done 3< <(plugins)
 

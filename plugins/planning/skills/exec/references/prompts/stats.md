@@ -49,8 +49,6 @@ Run from cwd:
 - `git diff --stat DEFAULT_BRANCH...HEAD | head -10` and pick top 5 files by churn
 - `git log --oneline DEFAULT_BRANCH..HEAD | wc -l` for commit count on branch
 
-If `hg` is the VCS (no `.git` dir, `.hg` present), use `hg diff --stat` and `hg log -r 'DEFAULT_BRANCH..HEAD'` equivalents.
-
 ## Output format
 
 Emit ONLY this markdown report — no preamble, no commentary:
@@ -91,6 +89,6 @@ Top files by churn:
 - Be precise with numbers — use actual values from the logs, not estimates.
 - Format tokens as "Nk" when >= 1000 (e.g., 78k, 1.2M).
 - Format durations as "Xm Ys" for runs over 60s, else "Ys" or "Xms" for very short.
-- If a section has no data (e.g., external review didn't run on hg), write "n/a" rather than omitting the line.
+- If a section has no data (e.g., external review was skipped), write "n/a" rather than omitting the line.
 - Keep the report compact — this is a summary, not a transcript.
 ```

@@ -20,7 +20,6 @@ The planning plugin has three components: make (plan creation), exec (autonomous
 /planning:make add user authentication
 /planning:make fix the race condition in the connection pool
 /planning:make refactor the middleware stack
-/planning:make add my Go testing rules to user-level planning rules
 ```
 
 ### Plan File Structure
@@ -91,7 +90,7 @@ Subagents in current Claude Code do not have the Agent tool — they cannot spaw
 - scope creep and over-engineering
 - testing requirements and coverage
 - task granularity and ordering
-- convention adherence (via CLAUDE.md and custom rules)
+- convention adherence (via CLAUDE.md)
 
 ### Output
 Structured report with severity-rated findings:

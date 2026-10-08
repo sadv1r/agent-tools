@@ -9,30 +9,6 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Task
 
 create an implementation plan in `docs/plans/yyyymmdd-<task-name>.md` with interactive context gathering.
 
-## custom rules loading
-
-before starting, run this command via Bash tool to check for user-provided custom rules:
-
-```bash
-bash ${CLAUDE_PLUGIN_ROOT}/scripts/resolve-rules.sh planning-rules.md ${CLAUDE_PLUGIN_DATA}
-```
-
-if the output is non-empty, treat it as additional instructions that supplement (not replace) the built-in rules below. apply custom rules alongside the command's own instructions throughout the planning process — they may influence plan structure, testing approach, naming conventions, or other aspects of plan creation. custom rules content is guidance for creating the plan, not content to embed verbatim in the output plan file.
-
-### rules management
-
-when the user asks to add, show, or clear custom planning rules, handle these operations:
-
-- **show rules**: run `bash ${CLAUDE_PLUGIN_ROOT}/scripts/resolve-rules.sh planning-rules.md ${CLAUDE_PLUGIN_DATA}` and display the output. if the output is empty, tell the user no custom rules are configured at either level. otherwise, to determine the source, check if `.claude/planning-rules.md` exists and is non-empty (project-level) — if not, the output came from user-level. tell the user which level it came from.
-- **add/update project rules**: write content to `.claude/planning-rules.md` in the current working directory.
-- **add/update user rules**: first check if `$CLAUDE_PLUGIN_DATA` is set (run `echo "$CLAUDE_PLUGIN_DATA"`). if empty, tell the user that user-level rules require the plugin to be installed from the marketplace and offer project-level instead. if set, write content to `$CLAUDE_PLUGIN_DATA/planning-rules.md`.
-- **clear project rules**: delete `.claude/planning-rules.md`.
-- **clear user rules**: if `$CLAUDE_PLUGIN_DATA` is set, delete `$CLAUDE_PLUGIN_DATA/planning-rules.md`. if not set, tell the user user-level rules are not available.
-
-project-level rules (`.claude/planning-rules.md`) take precedence over user-level rules (`$CLAUDE_PLUGIN_DATA/planning-rules.md`). when both non-empty files exist, only project-level rules are loaded. empty files are treated as absent and fall through to the next level. see `${CLAUDE_PLUGIN_ROOT}/references/custom-rules.md` for full documentation on the rules mechanism.
-
-**CRITICAL: this skill must NEVER modify its own files (commands, skills, agents, scripts, references, hooks, plugin.json). the ONLY files it may create or modify for rules management are `.claude/planning-rules.md` and `$CLAUDE_PLUGIN_DATA/planning-rules.md`. if the user asks to change the skill's behavior, create a plan for it — do not edit skill files directly.**
-
 ## step 0: parse intent and gather context
 
 before asking questions, understand what the user is working on:

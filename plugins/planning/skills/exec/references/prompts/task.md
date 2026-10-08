@@ -1,6 +1,6 @@
 # Task prompt for subagent
 
-Use this prompt when spawning each task subagent (replace `PLAN_FILE_PATH`, `PROGRESS_FILE_PATH`, `USER_RULES`, and `${CLAUDE_PLUGIN_ROOT}` with actual values):
+Use this prompt when spawning each task subagent (replace `PLAN_FILE_PATH`, `PROGRESS_FILE_PATH`, and `${CLAUDE_PLUGIN_ROOT}` with actual values):
 
 ```
 Read the plan file at PLAN_FILE_PATH. Find the FIRST Task section (### Task N: or ### Iteration N:) that has uncompleted checkboxes ([ ]).
@@ -24,8 +24,6 @@ When you hit a judgment call the plan does not spell out (e.g. "should this file
 When those still leave it genuinely 50/50, pick the smaller, simpler, more reversible option and move on.
 
 Record every non-obvious decision you made this way, and every deviation from the plan, so the orchestrator can report them to the user at the end (see STEP 5).
-
-USER_RULES
 
 STEP 1 - IMPLEMENT:
 - Read the plan's Overview and Context sections to understand the work

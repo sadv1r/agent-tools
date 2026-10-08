@@ -14,6 +14,9 @@ Changes from upstream:
   description lists trigger phrases such as "make a plan".
 - Git only. `detect-vcs.sh` and the Mercurial branches in the exec scripts and
   prompts are gone.
+- No custom rules. The upstream `resolve-rules.sh` loader and the
+  `custom-rules.md` files are gone; conventions come from `CLAUDE.md`, and
+  changes go straight into the plugin.
 
 The upstream plugin `planning@umputun-cc-thingz` has the same name. Uninstall
 it if you install this one, so only one of them triggers.

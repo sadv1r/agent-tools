@@ -24,7 +24,7 @@ If the output is non-empty, treat it as additional review criteria that suppleme
 
 ## Plan Structure Reference
 
-The plan template is defined in `${CLAUDE_PLUGIN_ROOT}/commands/make.md` (referred to as "plan template" below).
+The plan template is defined in `${CLAUDE_PLUGIN_ROOT}/skills/make/SKILL.md` (referred to as "plan template" below).
 
 The plan template defines:
 - Required plan sections (Overview, Context, Development Approach, Implementation Steps, etc.)

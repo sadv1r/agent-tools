@@ -8,6 +8,10 @@ See [references/usage.md](references/usage.md).
 
 Forked from upstream plugin version 3.10.3
 ([`d407561`](https://github.com/umputun/cc-thingz/commit/d407561bca8dbb42d5eade428a048f64525c710c)).
+Changes from upstream:
+
+- `make` is a skill (`skills/make/SKILL.md`) instead of a command, and its
+  description lists trigger phrases such as "make a plan".
 
 The upstream plugin `planning@umputun-cc-thingz` has the same name. Uninstall
 it if you install this one, so only one of them triggers.

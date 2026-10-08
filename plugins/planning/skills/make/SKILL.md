@@ -1,5 +1,6 @@
 ---
-description: Create structured implementation plan in docs/plans/
+name: make
+description: Create structured implementation plan in docs/plans/. Use when user says "make a plan", "create a plan", "write an implementation plan", "plan this feature", or wants a structured plan file before implementation.
 argument-hint: describe the feature or task to plan
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Agent, AskUserQuestion, Task, EnterPlanMode, TaskCreate, TaskUpdate, TaskList
 ---

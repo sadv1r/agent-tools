@@ -137,7 +137,6 @@ Specific patterns detected that add unnecessary complexity:
 ### Testing Coverage Assessment
 - Tasks with proper test requirements: X/Y
 - Missing test specifications: [list tasks]
-- Test-first (TDD) compliance: [yes/partial/no]
 
 ### Verdict
 **[APPROVE / NEEDS REVISION]**

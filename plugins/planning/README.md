@@ -20,6 +20,9 @@ Changes from upstream:
 - No prompt overrides. `resolve-file.sh`, `customize-file.sh` and the
   `.claude/exec-plan/` and `$CLAUDE_PLUGIN_DATA` override lookups are gone;
   `exec` reads its prompts and agent files from the plugin.
+- No TDD variant. `make` doesn't ask whether to write tests first, plans have
+  no testing-approach line, and `plan-review` doesn't grade TDD compliance.
+  Every task still has to include tests.
 
 The upstream plugin `planning@umputun-cc-thingz` has the same name. Uninstall
 it if you install this one, so only one of them triggers.

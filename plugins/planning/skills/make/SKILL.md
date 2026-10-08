@@ -69,12 +69,7 @@ show the discovered context, then ask questions **one at a time** using the AskU
    - can be open-ended if constraints vary widely
    - wait for response before next question
 
-4. **testing approach**: use AskUserQuestion - "do you prefer TDD or regular approach?"
-   - options: "TDD (tests first)" and "Regular (code first, then tests)"
-   - store preference for reference during implementation
-   - wait for response before next question
-
-5. **plan title**: use AskUserQuestion - "short descriptive title?"
+4. **plan title**: use AskUserQuestion - "short descriptive title?"
    - provide suggested name based on intent
 
 after all questions answered, synthesize responses into plan context.
@@ -131,7 +126,6 @@ check `docs/plans/` for existing files, then create `docs/plans/yyyymmdd-<task-n
 - dependencies identified: [dependencies]
 
 ## Development Approach
-- **testing approach**: [TDD / Regular - from user preference in planning]
 - complete each task fully before moving to the next
 - make small, focused changes
 - **CRITICAL: every task MUST include new/updated tests** for code changes in that task

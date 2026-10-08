@@ -10,7 +10,7 @@ The planning plugin has three components: make (plan creation), exec (autonomous
 
 ### Workflow
 1. **Step 0** — parses intent (feature, bug fix, refactor, migration) and explores codebase for context
-2. **Step 1** — asks focused questions one at a time: goal, scope, constraints, testing approach, title
+2. **Step 1** — asks focused questions one at a time: goal, scope, constraints, title
 3. **Step 1.5** — proposes 2-3 implementation approaches with trade-offs (skipped if obvious)
 4. **Step 2** — creates plan file at `docs/plans/yyyymmdd-<task-name>.md`
 5. **Step 3** — offers next steps: interactive review, auto review, implement, or done

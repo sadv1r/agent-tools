@@ -55,29 +55,13 @@ Set via `userConfig` in plugin.json (prompted at install):
 | `finalize_enabled` | `true` | run rebase + squash phase |
 | `plans_dir` | `docs/plans` | directory for plan files |
 
-### Customization
-Prompts and agent definitions use a three-layer override chain:
-1. Project: `.claude/exec-plan/prompts/` and `.claude/exec-plan/agents/`
-2. User: `$CLAUDE_PLUGIN_DATA/prompts/` and `$CLAUDE_PLUGIN_DATA/agents/`
-3. Bundled defaults
+### Prompts
 
-Nothing is copied anywhere automatically. Installs before planning 3.10.0 did seed `$CLAUDE_PLUGIN_DATA` with
-copies of every bundled prompt and agent — those copies still shadow the bundled defaults and no longer track
-upgrades, so check that directory and delete anything you did not deliberately edit.
-
-To customize a file, copy it into an override path first with the `customize-file.sh` helper. The runnable commands,
-and what an override commits you to, are in the **Customization** paragraph of the project README:
-https://github.com/umputun/cc-thingz#planning — kept there because both plugin paths have to be spelled out
-literally, and only the README carries that form. That paragraph is authoritative; do not restate it here.
-
-### Customization patterns
-
-- *Route review fanout to named specialists.* Override `prompts/review.md` to launch named subagents (`qa-expert`, `code-quality`, `go-test-expert`, `implementation-reviewer`, `documentation`) instead of `general-purpose`.
-- *Delegate to an existing skill.* Override a prompt or agent file to read another skill's `SKILL.md` and follow it inline. Examples: `agents/smells.txt` → `/smells` skill; `prompts/finalizer.md` → `/rebase-commits` skill.
+Prompts and agent definitions live in `skills/exec/references/prompts/` and `skills/exec/references/agents/`. To change them, edit those files.
 
 ### Subagent constraint
 
-Subagents in current Claude Code do not have the Agent tool — they cannot spawn other subagents. `prompts/review.md` is therefore read by the main session orchestrator (as a playbook), not given to a subagent. The 5-specialist fanout runs directly from the main session. Leaf-work prompts (`task.md`, `fixer.md`, `finalizer.md`, `codex-review.md`, `agents/smells.txt`) can be subagent prompts because they don't need to spawn further. Any custom override needing parallel fanout must follow the same playbook pattern.
+Subagents in current Claude Code do not have the Agent tool — they cannot spawn other subagents. `prompts/review.md` is therefore read by the main session orchestrator (as a playbook), not given to a subagent. The 5-specialist fanout runs directly from the main session. Leaf-work prompts (`task.md`, `fixer.md`, `finalizer.md`, `codex-review.md`, `agents/smells.txt`) can be subagent prompts because they don't need to spawn further. Any prompt that needs parallel fanout must follow the same playbook pattern.
 
 ## Plan-Review — agent
 

@@ -12,20 +12,15 @@ Execute plan file tasks sequentially, each in an isolated subagent.
 
 - `$ARGUMENTS` — path to plan file (optional; if omitted, ask user to pick from `plans_dir` userConfig directory, default: `docs/plans/`)
 
-## File Resolution
+## Prompt Files
 
-ALWAYS use the resolve script to read prompt and agent files. NEVER construct the override chain manually:
-```
-bash ${CLAUDE_PLUGIN_ROOT}/skills/exec/scripts/resolve-file.sh prompts/task.md ${CLAUDE_PLUGIN_DATA}
-bash ${CLAUDE_PLUGIN_ROOT}/skills/exec/scripts/resolve-file.sh agents/quality.txt ${CLAUDE_PLUGIN_DATA}
-```
-The script checks project overrides, user overrides, and bundled defaults automatically.
+Prompt and agent files live in `${CLAUDE_PLUGIN_ROOT}/skills/exec/references/`. Paths like `prompts/task.md` and `agents/quality.txt` below are relative to it. Read them with the Read tool.
 
 ### Placeholder Substitution
 
 After reading a prompt file, replace ALL placeholders with actual values before passing to a subagent. Subagents run in fresh contexts without plugin env vars.
 
-Always substitute: `PLAN_FILE_PATH`, `PROGRESS_FILE_PATH`, `DEFAULT_BRANCH`, `${CLAUDE_PLUGIN_ROOT}` (resolve to actual absolute path), `RESOLVE_SCRIPT` (absolute path to `${CLAUDE_PLUGIN_ROOT}/skills/exec/scripts/resolve-file.sh`), `PLUGIN_DATA_DIR` (resolved `${CLAUDE_PLUGIN_DATA}` path — passed as second argument to resolve-file.sh so it can find user overrides), and phase-specific values (`FINDINGS_LIST`, `REVIEW_PHASE`, `DIFF_COMMAND`).
+Always substitute: `PLAN_FILE_PATH`, `PROGRESS_FILE_PATH`, `DEFAULT_BRANCH`, `${CLAUDE_PLUGIN_ROOT}` (resolve to actual absolute path), and phase-specific values (`FINDINGS_LIST`, `REVIEW_PHASE`, `DIFF_COMMAND`).
 
 ## Process
 
@@ -163,7 +158,7 @@ Report to user: "--- Review phase 1: comprehensive ---"
 
 Loop up to `review_iterations` times (userConfig, default: 5). Track the current iteration number:
 
-1. **Read review.md as a playbook (NOT as a subagent prompt)** — resolve `prompts/review.md` through the override chain and read it from this main session. It tells YOU (the orchestrator) which specialist agents to fan out for the current `REVIEW_PHASE`. Substitute `DEFAULT_BRANCH`, `PLAN_FILE_PATH`, `PROGRESS_FILE_PATH`, `${CLAUDE_PLUGIN_ROOT}`, and `REVIEW_PHASE` in the resolved content. Then follow the playbook FROM THIS SESSION: launch the specified Agent tool calls in a single message for parallel execution. Subagents do not have Agent tool access, so the fanout MUST be initiated from the main orchestrator.
+1. **Read review.md as a playbook (NOT as a subagent prompt)** — read `prompts/review.md` from this main session. It tells YOU (the orchestrator) which specialist agents to fan out for the current `REVIEW_PHASE`. Substitute `DEFAULT_BRANCH`, `PLAN_FILE_PATH`, `PROGRESS_FILE_PATH`, `${CLAUDE_PLUGIN_ROOT}`, and `REVIEW_PHASE` in its content. Then follow the playbook FROM THIS SESSION: launch the specified Agent tool calls in a single message for parallel execution. Subagents do not have Agent tool access, so the fanout MUST be initiated from the main orchestrator.
    - **Iteration 1**: set `REVIEW_PHASE` to `comprehensive`. Per the playbook, launch 5 parallel review agents (quality, implementation, testing, simplification, documentation).
    - **Iteration 2 and later**: set `REVIEW_PHASE` to `critical`. Per the playbook, launch 2 parallel review agents (quality, implementation) focused on critical/major issues only. Before this iteration, report to user: "--- Review phase 1: critical re-check (iteration N) ---"
 
@@ -173,7 +168,7 @@ Loop up to `review_iterations` times (userConfig, default: 5). Track the current
 
 3. **If ALL agents reported zero issues** → report "Review phase 1: clean" and proceed to the next phase.
 
-4. **Spawn a fixer agent** — resolve `prompts/fixer.md` through the override chain. Launch with `mode: "bypassPermissions"`, `subagent_type: "general-purpose"`. Pass the FULL unedited review output as FINDINGS_LIST — the fixer decides what's real, not you.
+4. **Spawn a fixer agent** — use `prompts/fixer.md`. Launch with `mode: "bypassPermissions"`, `subagent_type: "general-purpose"`. Pass the FULL unedited review output as FINDINGS_LIST — the fixer decides what's real, not you.
 
 5. **After fixer returns** → show the "FIXES:" section to the user. Report "Review phase 1: iteration N fixes applied". Check for uncommitted changes: run `git status --porcelain`. If output is non-empty, show every reported path and warn that these uncommitted changes are absent from the committed branch diff used by the next review. This is report-only: do not retry, abort, or commit leftovers because of this check. Loop back to step 1.
 
@@ -185,7 +180,7 @@ Report to user: "--- Review phase 2: code smells analysis ---"
 
 Run once (no loop):
 
-1. **Spawn a smells agent** — resolve `agents/smells.txt` through the override chain. Launch one Agent tool call with `mode: "bypassPermissions"`, `subagent_type: "general-purpose"`, and the resolved agent prompt.
+1. **Spawn a smells agent** — launch one Agent tool call with `mode: "bypassPermissions"`, `subagent_type: "general-purpose"`, and the prompt from `agents/smells.txt`.
 
 2. **Collect findings** — after the agent returns, report to user with a compact list of findings (one line per finding). Log findings to progress file:
    `bash ${CLAUDE_PLUGIN_ROOT}/skills/exec/scripts/append-progress.sh <progress-file> "review phase 2: findings"`
@@ -193,7 +188,7 @@ Run once (no loop):
 
 3. **If no issues found** → report "Smells analysis: clean" and proceed to the next phase.
 
-4. **Spawn a fixer agent** — resolve `prompts/fixer.md` through the override chain. Launch with `mode: "bypassPermissions"`, `subagent_type: "general-purpose"`. Pass the FULL smells output as FINDINGS_LIST.
+4. **Spawn a fixer agent** — use `prompts/fixer.md`. Launch with `mode: "bypassPermissions"`, `subagent_type: "general-purpose"`. Pass the FULL smells output as FINDINGS_LIST.
 
 5. **After fixer returns** → report fixes to user. Check for uncommitted changes: run `git status --porcelain`. If output is non-empty, show every reported path and warn that these uncommitted changes are absent from the committed branch diff used by the next review. This is report-only: do not retry, abort, or commit leftovers because of this check. Proceed to the next phase.
 
@@ -203,7 +198,7 @@ Report to user: "--- Review phase 3: external review ---"
 
 Adversarial loop: the external reviewer reviews the code, fixer evaluates and fixes, the reviewer re-reviews. The loop exits early once an iteration produces no `CRITICAL` or `MAJOR` findings — minor-only iterations still get fixed by the fixer, but no further round-trip happens. Subsequent phases (smells, critical-only) act as the final safety net.
 
-All invocations go through `run-external-review.sh`, which takes the `external_review_cmd` userConfig value as its first argument and the prompt as its second. An empty first argument makes it fall back to codex. Do NOT call `run-codex.sh` directly — it cannot honor `external_review_cmd`. Older `codex-review.md` overrides may carry launcher or availability instructions before `## Prompt`; ignore those operational lines. Step 9 alone controls reviewer invocation and skip/failure handling.
+All invocations go through `run-external-review.sh`, which takes the `external_review_cmd` userConfig value as its first argument and the prompt as its second. An empty first argument makes it fall back to codex. Do NOT call `run-codex.sh` directly — it cannot honor `external_review_cmd`. Step 9 alone controls reviewer invocation and skip/failure handling.
 
 If the script exits 127 AND its stderr carries the `run-external-review:` marker, no external tool is available: report `External review: skipped — <stderr line>`, quoting the reason verbatim (it distinguishes a configured command missing from `PATH` from codex missing with no command set), and proceed to step 10. A 127 without that marker came from the reviewer itself — typically a wrapper script whose own inner tool is missing — and is a reviewer failure, not a skip.
 
@@ -211,9 +206,9 @@ Any other non-zero exit is a reviewer failure too, not a clean review: report `E
 
 Loop up to `external_review_iterations` times (userConfig, default: 10):
 
-1. **Resolve the review prompt** — read `prompts/codex-review.md` through the override chain. Replace `DIFF_COMMAND`: every iteration uses `git diff DEFAULT_BRANCH...HEAD`. Fixers commit their changes, so later reviews must include the committed branch diff. Also replace `PLAN_FILE_PATH` (so the reviewer can read the plan for intent) and `PROGRESS_FILE_PATH` (so the reviewer can read prior review iterations and fixer responses and avoid re-reporting fixed issues).
+1. **Prepare the review prompt** — read `prompts/codex-review.md`. Replace `DIFF_COMMAND`: every iteration uses `git diff DEFAULT_BRANCH...HEAD`. Fixers commit their changes, so later reviews must include the committed branch diff. Also replace `PLAN_FILE_PATH` (so the reviewer can read the plan for intent) and `PROGRESS_FILE_PATH` (so the reviewer can read prior review iterations and fixer responses and avoid re-reporting fixed issues).
 
-2. **Run the external reviewer** — first write the resolved prompt to `/tmp/external-review-<plan-name>.txt` with the Write tool (same `<plan-name>` as the progress file, overwrite it each iteration), then run `bash ${CLAUDE_PLUGIN_ROOT}/skills/exec/scripts/run-external-review.sh '${user_config.external_review_cmd}' "$(cat /tmp/external-review-<plan-name>.txt)"` with `run_in_background: true`. Do NOT paste the prompt text inline: it contains backticks and may contain `$` (the bundled prompt asks for findings formatted as `` `SEVERITY: file:line - description` ``), and the shell would run those as command substitutions before the reviewer saw the prompt. Write the file with the Write tool for that same reason — `echo "…" >` or a heredoc with an unquoted delimiter expands the backticks and `$` at write time, so the file the reviewer reads already has the format instruction blanked out. You will be notified when done — do NOT poll or sleep.
+2. **Run the external reviewer** — first write the prepared prompt to `/tmp/external-review-<plan-name>.txt` with the Write tool (same `<plan-name>` as the progress file, overwrite it each iteration), then run `bash ${CLAUDE_PLUGIN_ROOT}/skills/exec/scripts/run-external-review.sh '${user_config.external_review_cmd}' "$(cat /tmp/external-review-<plan-name>.txt)"` with `run_in_background: true`. Do NOT paste the prompt text inline: it contains backticks and may contain `$` (the bundled prompt asks for findings formatted as `` `SEVERITY: file:line - description` ``), and the shell would run those as command substitutions before the reviewer saw the prompt. Write the file with the Write tool for that same reason — `echo "…" >` or a heredoc with an unquoted delimiter expands the backticks and `$` at write time, so the file the reviewer reads already has the format instruction blanked out. You will be notified when done — do NOT poll or sleep.
 
    The first argument is substituted by Claude Code before you read this file — pass whatever it resolved to through verbatim, and keep the **single** quotes exactly as written. They matter in both directions: they stop a configured value's own `$` or backtick from being expanded by the shell, and when the option has never been configured Claude Code leaves the `${user_config....}` reference in place, which unquoted makes bash abort the whole call with `bad substitution` and report as a reviewer failure. Single-quoted, the literal token reaches the script, which recognises it as unconfigured and takes the codex fallback. If a value needs a literal `'`, wrap the command in a script and point the setting at that instead.
 
@@ -223,7 +218,7 @@ Loop up to `external_review_iterations` times (userConfig, default: 10):
 
 5. **Report findings to user** — show a compact list (one line per finding).
 
-6. **Spawn a fixer agent** — same as other review phases, with `description: "Fixer - external review"` so the stats phase can group this run under review phase 3. Resolve `prompts/fixer.md`, pass the reviewer output as FINDINGS_LIST. Fixer verifies, fixes, commits, reports FIXES.
+6. **Spawn a fixer agent** — same as other review phases, with `description: "Fixer - external review"` so the stats phase can group this run under review phase 3. Use `prompts/fixer.md`, pass the reviewer output as FINDINGS_LIST. Fixer verifies, fixes, commits, reports FIXES.
 
 7. **Report fixer results to user** - show FIXES section. Log to progress file. Check for uncommitted changes: run `git status --porcelain`. If output is non-empty, show every reported path and warn that these uncommitted changes are absent from the committed branch diff used by the next review. This is report-only: do not retry, abort, or commit leftovers because of this check.
 
@@ -237,7 +232,7 @@ If `external_review_iterations` reached with critical/major issues still found, 
 
 Report to user: "--- Review phase 4: critical/major only (single pass) ---"
 
-Same structure as step 7 but with `REVIEW_PHASE` set to `critical`. Resolve `prompts/review.md` and follow its playbook FROM THIS MAIN SESSION — launch 2 parallel review agents (quality, implementation) focusing on critical/major issues only. Subagents do not have Agent tool access, so the fanout MUST be initiated from the main orchestrator. Same fixer flow — pass findings to fixer, show FIXES to user.
+Same structure as step 7 but with `REVIEW_PHASE` set to `critical`. Read `prompts/review.md` and follow its playbook FROM THIS MAIN SESSION — launch 2 parallel review agents (quality, implementation) focusing on critical/major issues only. Subagents do not have Agent tool access, so the fanout MUST be initiated from the main orchestrator. Same fixer flow — pass findings to fixer, show FIXES to user.
 
 ### Step 11. Finalize
 
@@ -253,7 +248,7 @@ This is best-effort — if rebase fails, report the issue but don't block comple
 
 ### Step 12. Stats summary
 
-After finalize (or after step 11 was skipped when disabled), spawn one Agent tool call with `mode: "bypassPermissions"`, `subagent_type: "general-purpose"`, and the prompt from `prompts/stats.md`. Replace `DEFAULT_BRANCH` and `PROGRESS_FILE_PATH` in the resolved content.
+After finalize (or after step 11 was skipped when disabled), spawn one Agent tool call with `mode: "bypassPermissions"`, `subagent_type: "general-purpose"`, and the prompt from `prompts/stats.md`. Replace `DEFAULT_BRANCH` and `PROGRESS_FILE_PATH` in it.
 
 The stats agent reads this session's main log + subagent logs from `~/.claude/projects/<cwd-encoded>/`, aggregates per-phase token/duration/tool-use counts, runs `git diff --shortstat DEFAULT_BRANCH...HEAD` for branch churn, and returns a compact markdown report.
 
@@ -281,7 +276,6 @@ When stats summary is done (or skipped on failure):
 - If a subagent fails or leaves broken code, re-run the loop — do NOT investigate or fix it yourself
 - NEVER dismiss findings as "pre-existing", "not from changes", or "architectural" — ALL findings are actionable
 - NEVER summarize or filter agent findings — pass the full output to the fixer agent verbatim
-- All prompt and agent files MUST be resolved through the three-layer override chain before use
 - All `subagent_type` values must be `general-purpose` — agent files provide the specialized prompt
 - After reading a prompt file, substitute all placeholders before passing to subagent (see Placeholder Substitution)
 - Subagents run with NO human available — they must NEVER ask the user a question (no AskUserQuestion, no pausing for input). They decide judgment calls the plan does not settle from the project's lint rules, CLAUDE.md, and code conventions, and log each as a `[decision]`/`[deviation]` line for the completion report

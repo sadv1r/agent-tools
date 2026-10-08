@@ -2,7 +2,7 @@
 
 This file is a playbook for the main orchestrator session — NOT a prompt to spawn into a subagent. Subagents do not have access to the Agent tool in current Claude Code, so the parallel fanout below must be initiated from the main session.
 
-Resolve placeholders (`DEFAULT_BRANCH`, `PLAN_FILE_PATH`, `PROGRESS_FILE_PATH`, `REVIEW_PHASE`, `RESOLVE_SCRIPT`, `PLUGIN_DATA_DIR`), then follow the instructions below from the main session: launch the specified parallel Agent calls, collect findings from all returned agents, and pass them to the fixer subagent. The orchestrator does NOT fix issues itself — the fixer is a separate subagent that handles fixes.
+Resolve placeholders (`DEFAULT_BRANCH`, `PLAN_FILE_PATH`, `PROGRESS_FILE_PATH`, `REVIEW_PHASE`, `${CLAUDE_PLUGIN_ROOT}`), then follow the instructions below from the main session: launch the specified parallel Agent calls, collect findings from all returned agents, and pass them to the fixer subagent. The orchestrator does NOT fix issues itself — the fixer is a separate subagent that handles fixes.
 
 ## How to fan out (READ THIS CAREFULLY)
 
@@ -23,17 +23,17 @@ Do NOT embed diffs in agent prompts — tell each agent to run git commands itse
 
 Used when `REVIEW_PHASE` is `comprehensive`.
 
-Resolve each agent's prompt file using the resolve script (these are bash invocations, not parallel work — run them first, then assemble the agent prompts):
+Read each agent's prompt file (these are file reads, not parallel work — do them first, then assemble the agent prompts):
 
 ```
-bash RESOLVE_SCRIPT agents/quality.txt PLUGIN_DATA_DIR
-bash RESOLVE_SCRIPT agents/implementation.txt PLUGIN_DATA_DIR
-bash RESOLVE_SCRIPT agents/testing.txt PLUGIN_DATA_DIR
-bash RESOLVE_SCRIPT agents/simplification.txt PLUGIN_DATA_DIR
-bash RESOLVE_SCRIPT agents/documentation.txt PLUGIN_DATA_DIR
+${CLAUDE_PLUGIN_ROOT}/skills/exec/references/agents/quality.txt
+${CLAUDE_PLUGIN_ROOT}/skills/exec/references/agents/implementation.txt
+${CLAUDE_PLUGIN_ROOT}/skills/exec/references/agents/testing.txt
+${CLAUDE_PLUGIN_ROOT}/skills/exec/references/agents/simplification.txt
+${CLAUDE_PLUGIN_ROOT}/skills/exec/references/agents/documentation.txt
 ```
 
-For each resolved agent prompt, replace `DEFAULT_BRANCH` with the actual value, then prepend:
+For each agent prompt, replace `DEFAULT_BRANCH` with the actual value, then prepend:
 
 "CRITICAL: You are a READ-ONLY reviewer. Do NOT run git stash, git checkout, git reset, or any command that modifies the working tree. Other agents run in parallel. Only use git diff, git log, git show, and read files.
 
@@ -51,7 +51,7 @@ After ALL 5 agents return, produce a STRICT bullet-list report — no prose summ
 
 - Group findings by severity in this order: CRITICAL, MAJOR, MINOR. Use a heading per severity (`### CRITICAL`, `### MAJOR`, `### MINOR`). Skip a severity heading if it has zero findings.
 - Under each heading, one bullet per finding using EXACTLY this shape: `- <agent-name>: <file:line> — <description>`
-- Preserve the original agent attribution (e.g. `quality`, `implementation`, `testing`, `simplification`, `documentation` — whichever agent files were resolved). Do NOT rewrite as "agents" or "multiple agents".
+- Preserve the original agent attribution (e.g. `quality`, `implementation`, `testing`, `simplification`, `documentation` — whichever agents ran). Do NOT rewrite as "agents" or "multiple agents".
 - If two agents reported the same file:line + same issue, merge into one bullet and prefix both agent names separated by `+` (e.g. `- quality+implementation: main.go:12 — ...`).
 - Do NOT verify, fix, or dismiss findings here — the fixer agent does that. Just emit the report verbatim from agent outputs.
 - Omit agents that found nothing entirely (no need to mention them).
@@ -63,7 +63,7 @@ Do NOT add explanatory prose, recommendations, or commentary. The list goes stra
 
 Used when `REVIEW_PHASE` is `critical`.
 
-Resolve only `quality.txt` and `implementation.txt` using the resolve script. Replace `DEFAULT_BRANCH` in each, then prepend the same READ-ONLY preamble as comprehensive mode, plus:
+Read only `quality.txt` and `implementation.txt`. Replace `DEFAULT_BRANCH` in each, then prepend the same READ-ONLY preamble as comprehensive mode, plus:
 
 "Report ONLY critical and major issues — bugs, security vulnerabilities, data loss risks, broken functionality, incorrect logic, missing critical error handling. Ignore style, minor improvements, suggestions. Tag every reported finding with severity (CRITICAL or MAJOR) and format each on its own line as: `SEVERITY: file:line — description`."
 

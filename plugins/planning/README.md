@@ -17,6 +17,9 @@ Changes from upstream:
 - No custom rules. The upstream `resolve-rules.sh` loader and the
   `custom-rules.md` files are gone; conventions come from `CLAUDE.md`, and
   changes go straight into the plugin.
+- No prompt overrides. `resolve-file.sh`, `customize-file.sh` and the
+  `.claude/exec-plan/` and `$CLAUDE_PLUGIN_DATA` override lookups are gone;
+  `exec` reads its prompts and agent files from the plugin.
 
 The upstream plugin `planning@umputun-cc-thingz` has the same name. Uninstall
 it if you install this one, so only one of them triggers.

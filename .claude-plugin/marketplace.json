@@ -26,6 +26,13 @@
       "description": "Collaborative design dialogue: idea to approaches to design to plan, one question at a time",
       "category": "productivity",
       "tags": ["brainstorm", "design", "planning"]
+    },
+    {
+      "name": "planning",
+      "source": "./plugins/planning",
+      "description": "Structured implementation planning, interactive annotation review, and autonomous plan execution",
+      "category": "productivity",
+      "tags": ["planning", "plan", "execution", "review"]
     }
   ]
 }

@@ -10,6 +10,7 @@ installs from that layout too and converts each plugin into a Qwen extension.
 | [`workflow`](plugins/workflow) | `/retry` resumes work cut off by an interruption; the `backlog` skill keeps deferred work in `docs/backlog/`, one file per item |
 | [`brainstorm`](plugins/brainstorm) | Turns an idea into a design through one-at-a-time questions, two or three approaches and section-by-section review. A personal fork of umputun's [brainstorm](https://github.com/umputun/cc-thingz/tree/master/plugins/brainstorm) |
 | [`planning`](plugins/planning) | `/planning:make` writes a structured implementation plan to `docs/plans/`; the `exec` skill runs it task by task in fresh subagents, then reviews and finalizes the branch. A personal fork of umputun's [planning](https://github.com/umputun/cc-thingz/tree/master/plugins/planning) |
+| [`planning-dash`](plugins/planning-dash) | A live dashboard for a `/planning:exec` run in an [agterm](https://agterm.com) overlay: tasks, review phases, subagents, timeline and progress log, with the run's progress in the session's title bar |
 | [`hook-logger`](plugins/hook-logger) | Logs the payload of every hook event to `~/.claude/hooks-logs/` as JSONL, to see what each event carries before writing a hook. Packages karanb192's [event-logger](https://github.com/karanb192/claude-code-hooks/blob/main/utils/event-logger.py) as a plugin |
 
 ## Install
@@ -22,6 +23,7 @@ installs from that layout too and converts each plugin into a Qwen extension.
 /plugin install workflow@sadv1r-agent-tools
 /plugin install brainstorm@sadv1r-agent-tools
 /plugin install planning@sadv1r-agent-tools
+/plugin install planning-dash@sadv1r-agent-tools
 /plugin install hook-logger@sadv1r-agent-tools
 ```
 

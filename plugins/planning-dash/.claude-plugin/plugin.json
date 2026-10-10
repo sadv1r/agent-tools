@@ -1,0 +1,11 @@
+{
+  "name": "planning-dash",
+  "description": "Live agterm dashboard for a /planning:exec run: tasks, review phases, subagents, timeline and progress log in an overlay",
+  "version": "1.1.0",
+  "author": {
+    "name": "sadv1r"
+  },
+  "repository": "https://github.com/sadv1r/agent-tools",
+  "license": "MIT",
+  "keywords": ["planning", "exec", "dashboard", "agterm"]
+}

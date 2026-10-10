@@ -35,6 +35,13 @@
       "tags": ["planning", "plan", "execution", "review"]
     },
     {
+      "name": "planning-dash",
+      "source": "./plugins/planning-dash",
+      "description": "Live agterm dashboard for a /planning:exec run: tasks, review phases, subagents, timeline and progress log in an overlay",
+      "category": "productivity",
+      "tags": ["planning", "exec", "dashboard", "agterm"]
+    },
+    {
       "name": "hook-logger",
       "source": "./plugins/hook-logger",
       "description": "Logs every hook event's payload to ~/.claude/hooks-logs/ as JSONL, for inspecting what each event carries before writing a hook",

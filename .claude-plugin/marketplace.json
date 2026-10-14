@@ -33,6 +33,13 @@
       "description": "Structured implementation planning, interactive annotation review, and autonomous plan execution",
       "category": "productivity",
       "tags": ["planning", "plan", "execution", "review"]
+    },
+    {
+      "name": "hook-logger",
+      "source": "./plugins/hook-logger",
+      "description": "Logs every hook event's payload to ~/.claude/hooks-logs/ as JSONL, for inspecting what each event carries before writing a hook",
+      "category": "development",
+      "tags": ["hooks", "logging", "debug", "events"]
     }
   ]
 }
